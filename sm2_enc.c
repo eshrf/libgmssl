@@ -163,6 +163,7 @@ int SM2_CIPHERTEXT_VALUE_encode(
             break;
           default:
             /* error seq */
+            goto end;
             break;
         }
 
@@ -249,7 +250,9 @@ SM2_CIPHERTEXT_VALUE *SM2_CIPHERTEXT_VALUE_decode(
             break;
           default:
             /* error seq */
-            break;
+            OPENSSL_free(ret);
+            if (bn_ctx) BN_CTX_free(bn_ctx);
+            return NULL;
         }
 
 	ret->ephem_point = EC_POINT_new(ec_group);
