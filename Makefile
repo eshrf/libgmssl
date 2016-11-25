@@ -4,30 +4,29 @@ SM4OBJ=sms4_cbc.o sms4_cfb.o sms4_ecb.o sms4_ofb.o sms4_ctr.o sms4_wrap.o sms4.o
 TEST=gm sm2 sm4
 ALL=libgmssl.so $(TEST)
 
-CFLAGS=-ggdb3 -fPIC -Wall
+CFLAGS=-g -O2 -fPIC -Wall
 
 all: $(ALL)
 
-# %.o: %.c
-#	gcc -c -fPIC -Wall -ggdb3 -o $@ $+ -I$(OPENSSL_ROOT)/include
-OPENSSL_ROOT=/home/fang/gxp/deps/openssl
-# #OPENSSL_ROOT=/usr
-# OPENSSL_ROOT=$(CODEBASELOCAL)
+LOCAL_OPENSSL_INC=-I/home/fang/gxp/deps/openssl/include
+LOCAL_OPENSSL_LIB=-L/home/fang/gxp/deps/openssl/lib
+
 test:gm sm2 sm4
 	LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH ./gm
 	LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH ./sm2
 	LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH ./sm4
+
 gm: gmtest.o libgmssl.so
-	gcc -o $@ $< -I$(OPENSSL_ROOT)/include -L$(OPENSSL_ROOT)/lib -lcrypto -ldl -L. -lgmssl -lcrypto
+	gcc -o $@ $< $(LOCAL_OPENSSL_INC) $(LOCAL_OPENSSL_LIB) -lcrypto -ldl -L. -lgmssl -lcrypto
 
-sm4: sms4test.o
-	gcc -o $@ $+ -I$(OPENSSL_ROOT)/include -L$(OPENSSL_ROOT)/lib -lcrypto -ldl -L. -lgmssl -lcrypto
+sm4: sms4test.o libgmssl.so
+	gcc -o $@ $< $(LOCAL_OPENSSL_INC) $(LOCAL_OPENSSL_LIB) -lcrypto -ldl -L. -lgmssl -lcrypto
 
-sm2: sm2test.o
-	gcc -o $@ $+ -I$(OPENSSL_ROOT)/include -L$(OPENSSL_ROOT)/lib -lcrypto -ldl -L. -lgmssl -lcrypto
+sm2: sm2test.o libgmssl.so
+	gcc -o $@ $< $(LOCAL_OPENSSL_INC) $(LOCAL_OPENSSL_LIB) -lcrypto -ldl -L. -lgmssl -lcrypto
 
 libgmssl.so: $(SM2OBJ) $(SM3OBJ) $(SM4OBJ)
-	gcc -o $@ $+ -fPIC -shared -I$(OPENSSL_ROOT)/include -L$(OPENSSL_ROOT)/lib -lcrypto
+	gcc -o $@ $+ -fPIC -shared $(LOCAL_OPENSSL_INC) $(LOCAL_OPENSSL_LIB) -lcrypto
 
 clean:
 	rm -rf $(ALL) *.o

@@ -221,6 +221,7 @@ void ERR_load_SM2_strings(void);
 
 
 /* Function codes. */
+#define SM2_F_SM2_NOT_LISTED                    999
 #define SM2_F_SM2_SET_ID			100
 #define SM2_F_SM2_GET_ID			101
 #define SM2_F_SM2_COMPUTE_ID_DIGEST		102
@@ -249,17 +250,31 @@ void ERR_load_SM2_strings(void);
 
 
 /* Reason codes. */
-#define SM2_R_BAD_DATA				100
-#define SM2_R_UNKNOWN_CIPHER_TYPE		101
-#define SM2_R_ENCRYPT_FAILED			102
-#define SM2_R_DECRYPT_FAILED			103
-#define SM2_R_UNKNOWN_MAC_TYPE			104
-#define SM2_R_GEN_MAC_FAILED			105
-#define SM2_R_VERIFY_MAC_FAILED			106
-#define SM2_R_ECDH_FAILED			107
-#define SM2_R_BUFFER_TOO_SMALL			108
-#define SM2_R_SM2_KAP_NOT_INITED		109
-#define SM2_R_RANDOM_NUMBER_GENERATION_FAILED	110
+# define SM2_R_BAD_DATA                                   100
+# define SM2_R_BAD_SIGNATURE                              101
+# define SM2_R_BUFFER_TOO_SMALL                           102
+# define SM2_R_CIPHERTEXT_ENCODE_FAILED                   115
+# define SM2_R_DECRYPT_FAILED                             103
+# define SM2_R_ECDH_FAILED                                104
+# define SM2_R_ENCRYPT_FAILED                             105
+# define SM2_R_ERROR                                      106
+# define SM2_R_GEN_MAC_FAILED                             107
+# define SM2_R_GET_CIPHERTEXT_SIZE_FAILED                 116
+# define SM2_R_GET_KDF_FAILED                             117
+# define SM2_R_INNOR_ERROR                                118
+# define SM2_R_INVALID_EC_KEY                             119
+# define SM2_R_MALLOC_FAILED                              120
+# define SM2_R_MISSING_PARAMETERS                         108
+# define SM2_R_NEED_NEW_SETUP_VALUES                      109
+# define SM2_R_NULL_ARGUMENT                              121
+# define SM2_R_OCT2POINT_FAILED                           122
+# define SM2_R_POINT2OCT_FAILED                           123
+# define SM2_R_POINT_NEW_FAILED                           124
+# define SM2_R_RANDOM_NUMBER_GENERATION_FAILED            110
+# define SM2_R_SM2_KAP_NOT_INITED                         111
+# define SM2_R_UNKNOWN_CIPHER_TYPE                        112
+# define SM2_R_UNKNOWN_MAC_TYPE                           113
+# define SM2_R_VERIFY_MAC_FAILED                          114
 
 #ifdef __cplusplus
 }

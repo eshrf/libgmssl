@@ -37,3 +37,6 @@ libgmssl.so
 # Debug files
 *.dSYM/
 *.su
+/GPATH
+/GRTAGS
+/GTAGS

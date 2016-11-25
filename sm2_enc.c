@@ -112,11 +112,13 @@ int SM2_CIPHERTEXT_VALUE_encode(
         int ptoff, cipheroff, mactagoff;
 
 	if (!bn_ctx) {
-		return 0;
+          SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_ENCODE, ERR_R_BN_LIB);
+          return 0;
 	}
 
 	if (!(ptlen = EC_POINT_point2oct(ec_group, cv->ephem_point,
 		point_form, NULL, 0, bn_ctx))) {
+          SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_ENCODE, SM2_R_POINT2OCT_FAILED);
 		goto end;
 	}
 	cvlen = ptlen + cv->ciphertext_size + cv->mactag_size;
@@ -127,6 +129,7 @@ int SM2_CIPHERTEXT_VALUE_encode(
 		goto end;
 
 	} else if (*buflen < cvlen) {
+          SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_ENCODE, SM2_R_BUFFER_TOO_SMALL);
 		goto end;
 	}
 
@@ -169,6 +172,7 @@ int SM2_CIPHERTEXT_VALUE_encode(
 
 	if (!(ptlen = EC_POINT_point2oct(ec_group, cv->ephem_point,
                                          point_form, buf+ptoff, *buflen-ptoff, bn_ctx))) {
+          SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_ENCODE, SM2_R_POINT2OCT_FAILED);
 		goto end;
 	}
 	/* buf += ptlen; */                   /* 两次计算ptlen, 根据原代码逻辑, 肯定一致 */
@@ -196,21 +200,25 @@ SM2_CIPHERTEXT_VALUE *SM2_CIPHERTEXT_VALUE_decode(
         int ptoff, cipheroff, mactagoff;
 
 	if (!bn_ctx) {
+          SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, ERR_R_BN_LIB);
 		return NULL;
 	}
 
 	if (!(fixlen = SM2_CIPHERTEXT_VALUE_size(ec_group, point_form, 0, mac_md))) {
-		fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+          SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, SM2_R_GET_CIPHERTEXT_SIZE_FAILED);
+          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
 	if (buflen <= fixlen) {
-		fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+          SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, SM2_R_BUFFER_TOO_SMALL);
+          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
 	if (!(ret = OPENSSL_malloc(sizeof(SM2_CIPHERTEXT_VALUE)))) {
-		fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+          SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, SM2_R_MALLOC_FAILED);
+          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
@@ -258,13 +266,15 @@ SM2_CIPHERTEXT_VALUE *SM2_CIPHERTEXT_VALUE_decode(
 	ret->ephem_point = EC_POINT_new(ec_group);
 	ret->ciphertext = OPENSSL_malloc(ret->ciphertext_size);
 	if (!ret->ephem_point || !ret->ciphertext) {
-		fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+          SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, SM2_R_INNOR_ERROR);
+          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
         /* c1 */
 	if (!EC_POINT_oct2point(ec_group, ret->ephem_point, buf+ptoff, ptlen, bn_ctx)) {
-		fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+          SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, SM2_R_OCT2POINT_FAILED);
+          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		ERR_print_errors_fp(stdout);
 		goto end;
 	}
@@ -526,11 +536,13 @@ int SM2_decrypt_ex(const EVP_MD *kdf_md, const EVP_MD *mac_md,
 	int len;
 
 	if (!(len = SM2_CIPHERTEXT_VALUE_size(ec_group, point_form, 0, mac_md))) {
-		fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+          SM2err(SM2_F_SM2_DECRYPT, SM2_R_ERROR);
+          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 	if (inlen <= len) {
-		fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+          SM2err(SM2_F_SM2_DECRYPT, SM2_R_ERROR);
+          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
@@ -538,16 +550,19 @@ int SM2_decrypt_ex(const EVP_MD *kdf_md, const EVP_MD *mac_md,
 		*outlen = inlen - len;
 		return 1;
 	} else if (*outlen < inlen - len) {
-		fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+          SM2err(SM2_F_SM2_DECRYPT, SM2_R_ERROR);
+          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		return 0;
 	}
 
 	if (!(cv = SM2_CIPHERTEXT_VALUE_decode(ec_group, point_form, mac_md, in, inlen, seq))) {
-		fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+          SM2err(SM2_F_SM2_DECRYPT, SM2_R_ERROR);
+          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 	if (!SM2_do_decrypt(kdf_md, mac_md, cv, out, outlen, ec_key)) {
-		fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+          SM2err(SM2_F_SM2_DECRYPT, SM2_R_ERROR);
+          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
