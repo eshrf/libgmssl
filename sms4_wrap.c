@@ -49,7 +49,7 @@
  *
  */
 
-//#include "cryptlib.h"
+/* #include "cryptlib.h" */
 #include "sms4.h"
 #include <openssl/modes.h>
 

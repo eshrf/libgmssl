@@ -353,7 +353,7 @@ int SM2_KAP_prepare(SM2_KAP_CTX *ctx, unsigned char *ephem_point,
 
 	/* encode R = (x, y) for output and local buffer */
 
-	// FIXME: ret is size_t and ret is the output length
+	/* FIXME: ret is size_t and ret is the output length */
 	ret = EC_POINT_point2oct(ctx->group, ctx->point, ctx->point_form,
 		ephem_point, *ephem_point_len, ctx->bn_ctx);
 

@@ -62,8 +62,8 @@ int testsm3evp(unsigned char *in, int ilen,
 {
   EVP_MD_CTX *md_ctx = NULL;
   md_ctx = EVP_MD_CTX_create();
-  const EVP_MD *md = EVP_sm3(); //segment fault
-  //const EVP_MD *md = EVP_sha256();
+  const EVP_MD *md = EVP_sm3(); /* segment fault */
+  /* const EVP_MD *md = EVP_sha256(); */
   if (!EVP_DigestInit_ex(md_ctx, md, NULL)) {
     printf("init err\n");
     return 0;

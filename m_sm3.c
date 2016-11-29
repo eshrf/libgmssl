@@ -86,7 +86,7 @@ static const EVP_MD sm3_md = {
         NULL,
         NULL,
         /* note: https://wiki.openssl.org/index.php/Creating_an_OpenSSL_Engine_to_use_indigenous_ECDH_ECDSA_and_HASH_Algorithms#Digests */
-        EVP_PKEY_NULL_method,//{NID_undef, NID_undef, 0, 0, 0},
+        EVP_PKEY_NULL_method,/* {NID_undef, NID_undef, 0, 0, 0}, */
         SM3_BLOCK_SIZE,
         sizeof(sm3_ctx_t),
         NULL

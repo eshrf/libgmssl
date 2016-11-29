@@ -1,0 +1,33 @@
+SM2OBJ=sm2_lib.o sm2_asn1.o sm2_err.o sm2_sign.o sm2_enc.o sm2_kap.o kdf_x9_63.o
+SM3OBJ=sm3.o m_sm3.o
+SM4OBJ=sms4_cbc.o sms4_cfb.o sms4_ecb.o sms4_ofb.o sms4_ctr.o sms4_wrap.o sms4.o e_sms4.o
+TEST=gm sm2 sm4
+ALL=libgmssl.so $(TEST)
+
+LOCAL_OPENSSL_INC=-I$(HOME)/openssl/include
+LOCAL_OPENSSL_LIB=-L$(HOME)/openssl/lib
+
+CC=xlc
+CFLAGS=-M -g -O2 $(LOCAL_OPENSSL_INC) -brtl -qarch=com -qrtti=all -qlibansi -qthreaded
+
+all: $(ALL)
+
+test:gm sm2 sm4
+	./gm
+	./sm2
+	./sm4
+
+gm: gmtest.o libgmssl.so
+	$(CC) -o $@ gmtest.o -brtl -bexpfull $(LOCAL_OPENSSL_INC) $(LOCAL_OPENSSL_LIB) -L. -lcrypto -lgmssl -lcrypto
+
+sm4: sms4test.o libgmssl.so
+	$(CC) -o $@ sms4test.o -brtl -bexpfull $(LOCAL_OPENSSL_INC) $(LOCAL_OPENSSL_LIB) -lcrypto -ldl -L. -lgmssl -lcrypto
+
+sm2: sm2test.o libgmssl.so
+	$(CC) -o $@ sm2test.o -brtl -bexpfull $(LOCAL_OPENSSL_INC) $(LOCAL_OPENSSL_LIB) -lcrypto -ldl -L. -lgmssl -lcrypto
+
+libgmssl.so: $(SM2OBJ) $(SM3OBJ) $(SM4OBJ)
+	$(CC) -o $@ $? -G $(LOCAL_OPENSSL_INC) $(LOCAL_OPENSSL_LIB) -lcrypto
+
+clean:
+	rm -rf $(ALL) *.o

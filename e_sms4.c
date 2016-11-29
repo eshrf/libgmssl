@@ -51,7 +51,7 @@
 
 
 #include <stdio.h>
-//#include "cryptlib.h"
+/* #include "cryptlib.h" */
 
 #ifndef OPENSSL_NO_GMSSL
 #include <openssl/evp.h>
@@ -74,7 +74,7 @@ static int sms4_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
 		if (EVP_CIPHER_CTX_mode(ctx) == EVP_CIPH_OFB_MODE)
 			enc = 1;
 		else if (EVP_CIPHER_CTX_mode(ctx) == EVP_CIPH_CFB_MODE)
-			enc = 1;  //encrypt key == decrypt key
+			enc = 1;  /* encrypt key == decrypt key */
 	}
 
 	if (enc)
@@ -345,7 +345,7 @@ const EVP_CIPHER *EVP_sms4_wrap(void)
 }
 
 
-//TODO: EVP_sms4_256_xxx();
+/* TODO: EVP_sms4_256_xxx(); */
 
 
 

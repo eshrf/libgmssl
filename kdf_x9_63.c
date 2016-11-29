@@ -76,7 +76,7 @@ static void *x963_kdf(const EVP_MD *md, const void *in, size_t inlen,
 
 	EVP_MD_CTX_init(&ctx);
 
-	//FIXME: it might be wrong
+	/* FIXME: it might be wrong */
 	while (rlen > 0) {
 		counter_be = cpu_to_be32(counter);
 		counter++;
@@ -144,7 +144,7 @@ static void *x963_sm3kdf(const void *in, size_t inlen,
 	return x963_kdf(EVP_sm3(), in, inlen, out, outlen);
 }
 
-//FIXME: whirlpool
+/* FIXME: whirlpool */
 
 KDF_FUNC KDF_get_x9_63(const EVP_MD *md)
 {

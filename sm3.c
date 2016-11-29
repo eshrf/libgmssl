@@ -51,8 +51,8 @@
 
 
 #include "sm3.h"
-// note: replace cpu_to_be32 with htonl. is it OK?
-//#include "../byteorder.h"
+/* note: replace cpu_to_be32 with htonl. is it OK? */
+/* #include "../byteorder.h" */
 #include <arpa/inet.h>
 #include <string.h>
 

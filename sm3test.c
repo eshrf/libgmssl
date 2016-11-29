@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 # include <openssl/sm3.h>
 
 static char *test[] = {
-    //"",
+    /* "", */
     "abc",
     "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
     NULL,
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 static char *pt(unsigned char *md)
 {
     int i;
-    static char buf[80]; //FIXME: 80?
+    static char buf[80]; /* FIXME: 80? */
 
     for (i = 0; i < SM3_DIGEST_LENGTH; i++)
         sprintf(&(buf[i * 2]), "%02x", md[i]);

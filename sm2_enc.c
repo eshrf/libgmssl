@@ -77,7 +77,7 @@ int SM2_CIPHERTEXT_VALUE_size(const EC_GROUP *ec_group,
 	}
 
 #if 0
-	//FIXME: len will be 1 !!!
+	/* FIXME: len will be 1 !!! */
 	if (!(len = EC_POINT_point2oct(ec_group, point, point_form,
 		NULL, 0, bn_ctx))) {
 		goto end;
@@ -206,19 +206,16 @@ SM2_CIPHERTEXT_VALUE *SM2_CIPHERTEXT_VALUE_decode(
 
 	if (!(fixlen = SM2_CIPHERTEXT_VALUE_size(ec_group, point_form, 0, mac_md))) {
           SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, SM2_R_GET_CIPHERTEXT_SIZE_FAILED);
-          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
 	if (buflen <= fixlen) {
           SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, SM2_R_BUFFER_TOO_SMALL);
-          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
 	if (!(ret = OPENSSL_malloc(sizeof(SM2_CIPHERTEXT_VALUE)))) {
           SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, SM2_R_MALLOC_FAILED);
-          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
@@ -267,14 +264,12 @@ SM2_CIPHERTEXT_VALUE *SM2_CIPHERTEXT_VALUE_decode(
 	ret->ciphertext = OPENSSL_malloc(ret->ciphertext_size);
 	if (!ret->ephem_point || !ret->ciphertext) {
           SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, SM2_R_INNOR_ERROR);
-          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
         /* c1 */
 	if (!EC_POINT_oct2point(ec_group, ret->ephem_point, buf+ptoff, ptlen, bn_ctx)) {
           SM2err(SM2_F_SM2_CIPHERTEXT_VALUE_DECODE, SM2_R_OCT2POINT_FAILED);
-          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		ERR_print_errors_fp(stdout);
 		goto end;
 	}
@@ -427,7 +422,7 @@ SM2_CIPHERTEXT_VALUE *SM2_do_encrypt(const EVP_MD *kdf_md, const EVP_MD *mac_md,
 	nbytes = (EC_GROUP_get_degree(ec_group) + 7) / 8;
 
 
-	//OPENSSL_assert(nbytes == BN_num_bytes(n));
+	/* OPENSSL_assert(nbytes == BN_num_bytes(n)); */
 
 #if 0
 	/* check sm2 curve and md is 256 bits */
@@ -537,12 +532,10 @@ int SM2_decrypt_ex(const EVP_MD *kdf_md, const EVP_MD *mac_md,
 
 	if (!(len = SM2_CIPHERTEXT_VALUE_size(ec_group, point_form, 0, mac_md))) {
           SM2err(SM2_F_SM2_DECRYPT, SM2_R_ERROR);
-          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 	if (inlen <= len) {
           SM2err(SM2_F_SM2_DECRYPT, SM2_R_ERROR);
-          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
@@ -551,18 +544,15 @@ int SM2_decrypt_ex(const EVP_MD *kdf_md, const EVP_MD *mac_md,
 		return 1;
 	} else if (*outlen < inlen - len) {
           SM2err(SM2_F_SM2_DECRYPT, SM2_R_ERROR);
-          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		return 0;
 	}
 
 	if (!(cv = SM2_CIPHERTEXT_VALUE_decode(ec_group, point_form, mac_md, in, inlen, seq))) {
           SM2err(SM2_F_SM2_DECRYPT, SM2_R_ERROR);
-          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 	if (!SM2_do_decrypt(kdf_md, mac_md, cv, out, outlen, ec_key)) {
           SM2err(SM2_F_SM2_DECRYPT, SM2_R_ERROR);
-          //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
 		goto end;
 	}
 
@@ -628,7 +618,7 @@ int SM2_do_decrypt(const EVP_MD *kdf_md, const EVP_MD *mac_md,
 		goto end;
 	}
 	nbytes = (EC_GROUP_get_degree(ec_group) + 7) / 8;
-	//OPENSSL_assert(nbytes == BN_num_bytes(n));
+	/* OPENSSL_assert(nbytes == BN_num_bytes(n)); */
 
 #if 0
 	/* check sm2 curve and md is 256 bits */
@@ -657,7 +647,7 @@ int SM2_do_decrypt(const EVP_MD *kdf_md, const EVP_MD *mac_md,
 
 	/* B4: compute t = KDF(x2 || y2, clen) */
 
-	*outlen = cv->ciphertext_size; //FIXME: duplicated code
+	*outlen = cv->ciphertext_size; /* FIXME: duplicated code */
 	kdf(buf + 1, size - 1, out, outlen);
 
 

@@ -85,29 +85,25 @@ int SM2_set_id(EC_KEY *ec_key, const char *id)
 
 	if (strlen(id) > SM2_MAX_ID_LENGTH) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-          //fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		return 0;
 	}
 
 	if ((pid = EC_KEY_get_key_method_data(ec_key, sm2_data_dup,
 		sm2_data_free, sm2_data_free)) != NULL) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-          //fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		return 0;
 	}
 
 	if (!(pid = OPENSSL_strdup(id))) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-                  //	fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		return 0;
 	}
 
 	if (EC_KEY_insert_key_method_data(ec_key, pid, sm2_data_dup,
 		sm2_data_free, sm2_data_free)) {
 	          SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-                  //	fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
-		//ERR_print_errors_fp(stderr);
-		//OPENSSL_free(pid);
+		/* ERR_print_errors_fp(stderr); */
+		/* OPENSSL_free(pid); */
 		return 0;
 	}
 
@@ -173,32 +169,28 @@ int sm2_get_public_key_data(unsigned char *buf, EC_KEY *ec_key)
 	/* get curve generator coordinates */
 	if (!(point = EC_GROUP_get0_generator(ec_group))) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-                    //	fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		goto err;
 	}
 	if (!(len = EC_POINT_point2oct(ec_group, point,
 		POINT_CONVERSION_UNCOMPRESSED, oct, sizeof(oct), bn_ctx))) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-          //fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		goto err;
 	}
-	//OPENSSL_assert(len == 32 * 2 + 1);
+	/* OPENSSL_assert(len == 32 * 2 + 1);   */
 	memcpy(buf, oct + 1, len - 1);
 	buf += len - 1;
 
 	/* get pub_key coorindates */
 	if (!(point = EC_KEY_get0_public_key(ec_key))) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-          //fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		goto err;
 	}
 	if (!(len = EC_POINT_point2oct(ec_group, point,
 		POINT_CONVERSION_UNCOMPRESSED, oct, sizeof(oct), bn_ctx))) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-          //fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		goto err;
 	}
-	//OPENSSL_assert(len == 32 * 2 + 1);
+	/* OPENSSL_assert(len == 32 * 2 + 1); */
 	memcpy(buf, oct + 1, len - 1);
 	buf += len - 1;
 
@@ -213,7 +205,7 @@ err:
 	return ret;
 }
 
-//TODO: review this function again.
+/* TODO: review this function again. */
 int SM2_compute_id_digest(const EVP_MD *md, unsigned char *dgst,
 	unsigned int *dgstlen, EC_KEY *ec_key)
 {
@@ -226,7 +218,6 @@ int SM2_compute_id_digest(const EVP_MD *md, unsigned char *dgst,
 
 	if ((pkdatalen = sm2_get_public_key_data(pkdata, ec_key)) < 0) {
 	          SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-                  //	fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		goto err;
 	}
 
@@ -242,33 +233,26 @@ int SM2_compute_id_digest(const EVP_MD *md, unsigned char *dgst,
 	if (!(md_ctx = EVP_MD_CTX_create())) {
                     SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
 
-                    //		fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		goto err;
 	}
 	if (!EVP_DigestInit_ex(md_ctx, md, NULL)) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-          //		fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
-          //	ERR_print_errors_fp(stderr);
 		goto err;
 	}
 	if (!EVP_DigestUpdate(md_ctx, idbits, sizeof(idbits))) {
 	          SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-                  //	fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		goto err;
 	}
 	if (!EVP_DigestUpdate(md_ctx, id, strlen(id))) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-          //		fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		goto err;
 	}
 	if (!EVP_DigestUpdate(md_ctx, pkdata, pkdatalen)) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-          //		fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		goto err;
 	}
 	if (!EVP_DigestFinal_ex(md_ctx, dgst, dgstlen)) {
           SM2err(SM2_F_SM2_NOT_LISTED, SM2_R_ERROR);
-          //		fprintf(stderr, "error: %s %d\n", __FILE__, __LINE__);
 		goto err;
 	}
 

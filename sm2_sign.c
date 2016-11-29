@@ -132,7 +132,7 @@ static int sm2_sign_setup(EC_KEY *ec_key, BN_CTX *ctx_in, BIGNUM **kp, BIGNUM **
 			}
 		}
 
-		//FIXME: do we need this?
+		/* FIXME: do we need this? */
 		if (!BN_nnmod(x, x, order, ctx)) {
 			ECDSAerr(ECDSA_F_ECDSA_SIGN_SETUP, ERR_R_BN_LIB);
 			goto err;

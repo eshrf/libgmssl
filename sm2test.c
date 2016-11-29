@@ -241,8 +241,8 @@ int test_sm2_sign(const EC_GROUP *group,
 	const char *k, const char *r, const char *s)
 {
 	int ret = 0;
-	const EVP_MD *id_md;// = EVP_sm3();
-	const EVP_MD *msg_md;// = EVP_sm3();
+	const EVP_MD *id_md;
+	const EVP_MD *msg_md;
 	int type = NID_undef;
 	unsigned char dgst[EVP_MAX_MD_SIZE];
 	unsigned int dgstlen;
@@ -365,17 +365,15 @@ int test_sm2_enc(const EC_GROUP *group,
         /* 	printf("shit\n"); */
         /* 	goto end; */
         /* } */
-        //EC_KEY_free(ec_key);
+        /* EC_KEY_free(ec_key); */
 
         if (!SM2_decrypt_ex(kdf_md, mac_md, point_form, buf, buflen,
                             msg, &msglen, pri_key, seqs[i])) {
             fprintf(stderr, "error: %s %d, seq %d\n", __FILE__, __LINE__, seqs[i]);
-            //goto end;
             continue;
         }
         if (msglen != strlen(M) || memcmp(msg, M, strlen(M))) {
             fprintf(stderr, "error: %s %d, seq %d\n", __FILE__, __LINE__, seqs[i]);
-            //goto end;
             continue;
         }
     }
@@ -736,11 +734,11 @@ err:
 	if (ret)
 		ERR_print_errors(out);
 
-	//CRYPTO_cleanup_all_ex_data();
-	//ERR_remove_thread_state(NULL);
-	//ERR_free_strings();
-	//CRYPTO_mem_leaks(out);
-	//BIO_free(out);
+	/* CRYPTO_cleanup_all_ex_data(); */
+	/* ERR_remove_thread_state(NULL); */
+	/* ERR_free_strings(); */
+	/* CRYPTO_mem_leaks(out); */
+	/* BIO_free(out); */
 
 	return ret;
 }
