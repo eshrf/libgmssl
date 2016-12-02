@@ -465,6 +465,13 @@ int SM2_sign_ex(int type, const unsigned char *dgst, int dgstlen,
 
 	RAND_seed(dgst, dgstlen);
 
+        /* printf("%s\n", __FUNCTION__); */
+        /* for (int i = 0; i < dgstlen; i++) { */
+        /*   printf("%d-%x,", i, dgst[i]); */
+        /*   if (i % 10 == 0) printf("\n"); */
+        /* } */
+        /* printf("\n--\n"); */
+
 	if (!(s = SM2_do_sign_ex(dgst, dgstlen, k, x, ec_key))) {
 		*siglen = 0;
 		return 0;

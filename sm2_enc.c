@@ -539,6 +539,7 @@ int SM2_decrypt_ex(const EVP_MD *kdf_md, const EVP_MD *mac_md,
 		goto end;
 	}
 
+        /* printf("%d, %d, %d\n", *outlen, inlen, len); */
 	if (!out) {
 		*outlen = inlen - len;
 		return 1;

@@ -10,15 +10,15 @@
 #include <openssl/pem.h>
 #include <openssl/rand.h>
 
-static FILE *openkeyfile(const char *path) {
-  FILE *in;
-  in = fopen(path, "r");
-  if (!in) {
-    perror("openkeyfile");
-    return NULL;
-  }
-  return in;
-}
+/* static FILE *openkeyfile(const char *path) { */
+/*   FILE *in; */
+/*   in = fopen(path, "r"); */
+/*   if (!in) { */
+/*     perror("openkeyfile"); */
+/*     return NULL; */
+/*   } */
+/*   return in; */
+/* } */
 
 static void ch2hex(char *dst, const unsigned char *src, int srclen)
 {
@@ -27,7 +27,7 @@ static void ch2hex(char *dst, const unsigned char *src, int srclen)
     sprintf(&(dst[i * 2]), "%02x", src[i]);
 }
 
-static void checkhex(unsigned char *expect, int elen,
+static void checkhex(const char *expect, int elen,
 		     unsigned char *result, int rlen) {
      char *hex = (char *)malloc(rlen * 2);
 
@@ -72,7 +72,7 @@ int testsm3evp(unsigned char *in, int ilen,
     printf("update err\n");
     return 0;
   }
-  int olen = 32;
+  unsigned int olen = 32;
   if (!EVP_DigestFinal_ex(md_ctx, out, &olen))  {
     printf("final err\n");
     return 0;
@@ -138,20 +138,20 @@ int testsm4evpdec(unsigned char *in, int ilen,
 
 int main()
 {
-  int i, ret;
   unsigned char out[1024];
-  unsigned char outhex[2048];
+  /* unsigned char outhex[2048]; */
+  char *msg = "abc";
   const char *expect;
 
 
   printf("--- sm3 ---   ");
   expect = "66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0";
-  testsm3("abc", strlen("abc"), out);
+  testsm3((unsigned char*)msg, strlen(msg), out);
   checkhex(expect, strlen(expect), out, SM3_DIGEST_LENGTH);
 
   printf("--- sm3 evp ---   ");      /* OK */
   memset(out, 0, SM3_DIGEST_LENGTH);
-  testsm3evp("abc", strlen("abc"), out);
+  testsm3evp((unsigned char*)msg, strlen(msg), out);
   checkhex(expect, strlen(expect), out, SM3_DIGEST_LENGTH);
 
 

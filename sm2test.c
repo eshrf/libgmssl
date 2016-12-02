@@ -281,7 +281,10 @@ int test_sm2_sign(const EC_GROUP *group,
 		fprintf(stderr, "error: %s %d\n", __FUNCTION__, __LINE__);
 		goto err;
 	}
-
+        for (int i = 0; i < siglen; i++) {
+          printf("%d-%x,", i, sig[i]);
+          if (i % 10 == 0) printf("\n");
+        }
 	p = sig;
 	if (!(sm2sig = d2i_ECDSA_SIG(NULL, &p, siglen))) {
 		fprintf(stderr, "error: %s %d\n", __FUNCTION__, __LINE__);
@@ -330,7 +333,7 @@ int test_sm2_enc(const EC_GROUP *group,
     point_conversion_form_t point_form = POINT_CONVERSION_UNCOMPRESSED;
     unsigned char msg[128];
     unsigned char buf[sizeof(msg) + 128];
-    size_t msglen, buflen;
+    size_t msglen = sizeof(msg), buflen;
     int seqs[] = {123, 132, 213, 231, 312, 321};
     int i;
 
